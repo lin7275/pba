@@ -300,14 +300,14 @@ class PBATrainer:
         # self.fbank = Fbank(40).cuda()
         # self.spec_aug = SpectrumAug(max_time_mask_len=self.aug_config["spec_aug_time_mask_size"],
         #                             max_freq_mask_len=self.aug_config["spec_aug_freq_mask_size"])
-        if hasattr(self.model, 'frame_layers'):
-            self.model.frame_layers[1].freq_masker.mask_param = self.aug_config["spec_aug_freq_mask_size"]
-            self.model.frame_layers[1].time_masker.time_param = self.aug_config["spec_aug_time_mask_size"]
-        elif hasattr(self.model, 'trans'):
-            self.model.trans[1].freq_masker.mask_param = self.aug_config["spec_aug_freq_mask_size"]
-            self.model.trans[1].time_masker.time_param = self.aug_config["spec_aug_time_mask_size"]
-        else:
-            raise ValueError
+        # if hasattr(self.model, 'frame_layers'):
+        #     self.model.frame_layers[1].freq_masker.mask_param = self.aug_config["spec_aug_freq_mask_size"]
+        #     self.model.frame_layers[1].time_masker.time_param = self.aug_config["spec_aug_time_mask_size"]
+        # elif hasattr(self.model, 'trans'):
+        #     self.model.trans[1].freq_masker.mask_param = self.aug_config["spec_aug_freq_mask_size"]
+        #     self.model.trans[1].time_masker.time_param = self.aug_config["spec_aug_time_mask_size"]
+        # else:
+        #     raise ValueError
         dset = WavRandomSampleDataset(
             self.wav_dirs,
             # aug_config=self.aug_config,
@@ -710,8 +710,9 @@ def pba(rank, world_size, home, gpu_ids, proj_name, model, interval=40, start_ep
         model_config = {"model": 'densenet121_1d', 'growth_rate': 90,
                         "fbank_config": {"n_mels": 80},
                         "specaug_config": {"max_freq_mask_len": 5, "max_time_mask_len": 20}}
-    else:
-        raise NotImplementedError
+    elif model == 'resnet101':
+        model_config = {"model": 'resnet101',
+                        "fbank_config": {"n_mels": 40}}
     train_para = {
         "project_dir": f"{PROJECT_NAME}/{str(rank)}",
         "noise_dir": f"{wav_dir}/musan_segmented",
@@ -782,7 +783,7 @@ if __name__ == "__main__":
     parser.add_argument('--rank', type=str, required=True)
     parser.add_argument('--ws', type=int, required=True)
     parser.add_argument('--gpu_id', type=int, required=True)
-    parser.add_argument('--model', choices=['xvector', 'densenet121_1d'], required=True)
+    parser.add_argument('--model', choices=['xvector', 'densenet121_1d', "resnet101"], required=True)
     args = parser.parse_args()
     print(args)
 

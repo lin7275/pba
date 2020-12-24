@@ -445,14 +445,14 @@ class PBATrainer:
     def explore(self):
         new_config = convert2new(self.aug_config)
         explore(new_config)
-        if hasattr(self.model, 'frame_layers'):
-            self.model.frame_layers[1].freq_masker.mask_param = new_config["spec_aug"]['freq_mask_size']
-            self.model.frame_layers[1].time_masker.time_param = new_config["spec_aug"]['time_mask_size']
-        elif hasattr(self.model, 'trans'):
-            self.model.trans[1].freq_masker.mask_param = new_config["spec_aug"]['freq_mask_size']
-            self.model.trans[1].time_masker.time_param = new_config["spec_aug"]['time_mask_size']
-        else:
-            raise ValueError
+        # if hasattr(self.model, 'frame_layers'):
+        #     self.model.frame_layers[1].freq_masker.mask_param = new_config["spec_aug"]['freq_mask_size']
+        #     self.model.frame_layers[1].time_masker.time_param = new_config["spec_aug"]['time_mask_size']
+        # elif hasattr(self.model, 'trans'):
+        #     self.model.trans[1].freq_masker.mask_param = new_config["spec_aug"]['freq_mask_size']
+        #     self.model.trans[1].time_masker.time_param = new_config["spec_aug"]['time_mask_size']
+        # else:
+        #     raise ValueError
         # self.spec_aug = SpectrumAug(max_time_mask_len=new_config["spec_aug"]['time_mask_size'],
         #                             max_freq_mask_len=new_config["spec_aug"]['freq_mask_size'])
         self.aug_config = convert2old(new_config)
